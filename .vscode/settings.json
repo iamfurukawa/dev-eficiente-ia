@@ -1,0 +1,7 @@
+{
+    "python.defaultInterpreterPath": "./.venv/bin/python",
+    "jupyter.askForKernelRestart": false,
+    "python.terminal.activateEnvironment": true,
+    "jupyter.jupyterServerType": "local",
+    "jupyter.interactiveWindow.textEditor.executeSelection": true
+}
