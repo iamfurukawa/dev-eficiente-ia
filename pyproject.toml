@@ -5,10 +5,19 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "docling>=2.74.0",
+    "fastembed>=0.7.4",
+    "groq>=1.0.0",
+    "langextract>=1.1.1",
     "nltk>=3.9.2",
+    "numpy>=2.4.2",
     "openai>=2.21.0",
     "pydantic>=2.12.5",
+    "qdrant-client>=1.16.2",
+    "rank-bm25>=0.2.2",
     "scikit-learn>=1.8.0",
+    "sentence-transformers>=5.2.3",
+    "whoosh>=2.7.4",
 ]
 
 [dependency-groups]

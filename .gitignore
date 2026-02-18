@@ -8,3 +8,14 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Index directories
+index_dir/
+
+# Environment variables
+.env
+
+# Docling
+*/docling/images/
+*/docling/test_output/
+*/docling/db/
