@@ -3,7 +3,6 @@ import json
 from docling.chunking import HybridChunker
 from docling.document_converter import DocumentConverter
 from docling_core.transforms.chunker.tokenizer.huggingface import HuggingFaceTokenizer
-from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient, models
 from transformers import AutoTokenizer
 
@@ -27,10 +26,6 @@ chunker = HybridChunker(
 )
 
 chunks = list(chunker.chunk(document))
-
-# Initialize the embedding model
-embedding_model = SentenceTransformer(MODEL_NAME)
-embedding_dim = embedding_model.get_sentence_embedding_dimension()
 
 paper_title = "N/A"
 paper_url = "N/A"
@@ -57,7 +52,7 @@ qdrant = QdrantClient(path="db/data")
 qdrant.create_collection(
     collection_name="docling_paper",
     vectors_config=models.VectorParams(
-        size=embedding_dim,
+        size=qdrant.get_embedding_size(MODEL_NAME),
         distance=models.Distance.COSINE,
     ),
 )
@@ -68,9 +63,7 @@ ids = []
 
 for idx, chunk in enumerate(chunks):
     payload.append({"text": chunk.text, "metadata": metadata_document_info})
-    # Generate embeddings using sentence-transformers
-    chunk_embedding = embedding_model.encode(chunk.text)
-    embed.append(chunk_embedding)
+    embed.append(models.Document(text=chunk.text, model=MODEL_NAME))
     ids.append(idx)
 
 qdrant.upload_collection(
@@ -80,11 +73,14 @@ qdrant.upload_collection(
     payload=payload,
 )
 
-search_result = qdrant.query_points(
+result = qdrant.query_points(
     collection_name="docling_paper",
-    query=embedding_model.encode("what is docling?"),
+    query=models.Document(
+        text="what is docling?",
+        model=MODEL_NAME,
+    ),
 ).points
 
-print(search_result[0].payload)
-print(search_result[0].payload["text"])
-print(search_result[0].payload["metadata"]["url"])
+result[0].payload
+result[0].payload["text"]
+result[0].payload["metadata"]["url"]
